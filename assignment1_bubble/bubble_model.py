@@ -107,28 +107,3 @@ def main():
 
 main()
 
-
-def test_graph():
-    # add a title
-    plt.title("info")
-    # add axes' name
-    plt.ylabel("Y axis")
-    plt.xlabel("X axis")
-
-    # data w/ linspace
-    z = np.linspace(0, 10, 100)
-    # plot z
-    plt.plot(z, z, label="linear")
-    # add the legend
-    plt.legend()
-
-    # plot x and y as symple lists
-    plt.plot([1, 2, 3], [4, 5, 1])
-
-    # third line again with simple lists as x & y
-    x = [5, 8, 10]
-    y = [12, 16, 6]
-    plt.plot(x, y)
-
-    # Result
-    plt.show()
