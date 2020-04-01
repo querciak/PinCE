@@ -96,7 +96,6 @@ def calculate_price_second_phase(x, y, year, d, liq, pi):
                     stock = y[-1] + abs(gauss(50, 50))
                     print("else")
                 y.append(stock + gauss(50, 100))
-
     return x, y
 
 
