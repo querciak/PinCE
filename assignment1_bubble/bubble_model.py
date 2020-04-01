@@ -49,7 +49,11 @@ def calculate_price_first_phase(x, y, year, mp, pi):
         if day % save_every_x_days == 0:
             x.append(x[-1] + save_every_x_days)
             print("day:{}| stock:{}| tmp:{}".format(x[-1], stock, tmp))
-            y.append(stock + gauss(30, 30))
+            price = stock + gauss(30, 30)
+            if price > 0:
+                y.append(stock + gauss(30, 30))
+            else:
+                y.append(gauss(4, 1))
     return x, y
 
 
@@ -94,9 +98,9 @@ def plot_graph(x, y, length):
     print("Plotting graph...")
     plt.title("Ellesmera bubble")
     plt.ylabel("price [$]")
-    plt.xlabel("time [day]")
+    plt.xlabel("time [year]")
     plt.plot(x, y, label="bubble")
-    plt.xticks([(i)*365 for i in range(length+1)])
+    plt.xticks([i*365 for i in range(length+1)], [str(2020+i) for i in range(length+1)])
     plt.show()
 
 
