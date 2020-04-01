@@ -41,14 +41,15 @@ def calculate_price_first_phase(x, y, year, mp, pi):
     save_every_x_days = 10
     for day in range(365):
         tmp = year + 0.0026 * day
-        stock = gauss(2.7 ** tmp, 10 * (mp + pi))
+        # stock = gauss(2.7 ** tmp, 10 * (mp + pi))
+        stock = gauss(2.7 ** tmp, 10 * ((mp + 0.5)**2 + pi))
         ref = y[-1] / 3
         if stock < ref:
             stock = gauss(ref, ref * mp + pi)
         if day % save_every_x_days == 0:
             x.append(x[-1] + save_every_x_days)
             print("day:{}| stock:{}| tmp:{}".format(x[-1], stock, tmp))
-            y.append(stock + gammavariate(0.5, 5))
+            y.append(stock + gauss(30, 30))
     return x, y
 
 
@@ -72,7 +73,7 @@ def calculate_price_second_phase(x, y, year, d, liq, pi):
                     print("day:{}|stock:{}|tmp:{}".format(x[-1], stock, tmp))
                     if maxVAL < y[-1]:
                         maxVAL = y[-1]
-                    y.append(stock)
+                    y.append(stock + gauss(50, 100))
             if FALLING:
                 if y[-1] > maxVAL/3:
                     variation = abs(gauss(maxVAL/300, 100 / d))
@@ -82,27 +83,27 @@ def calculate_price_second_phase(x, y, year, d, liq, pi):
                         stock = -y[-1] / (d * 10)
 
                 else:
-                    stock = y[-1] + abs(gauss(50, 100))
+                    stock = y[-1] + abs(gauss(50, 50))
                     print("else")
-                y.append(stock)
+                y.append(stock + gauss(50, 100))
 
     return x, y
 
 
-def plot_graph(x, y):
+def plot_graph(x, y, length):
     print("Plotting graph...")
     plt.title("Ellesmera bubble")
     plt.ylabel("price [$]")
     plt.xlabel("time [day]")
     plt.plot(x, y, label="bubble")
-    # plt.bar(x, y, width=0.1)
+    plt.xticks([(i)*365 for i in range(length+1)])
     plt.show()
 
 
 def main():
     mp, d, liq, length, pi = model_specs()  # read characteristics of 'Ellesmera' (fictional name of a new application)
     x, y = fill_list(mp, d, liq, length, pi)  # fill list with nominal price of 'Ellesmera
-    plot_graph(x, y)  # plot graph
+    plot_graph(x, y, length)  # plot graph
 
 
 main()
