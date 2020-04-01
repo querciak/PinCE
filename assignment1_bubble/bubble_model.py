@@ -51,9 +51,11 @@ def calculate_price_first_phase(x, y, year, mp, pi):
             print("day:{}| stock:{}| tmp:{}".format(x[-1], stock, tmp))
             price = stock + gauss(30, 30)
             if price > 0:
-                y.append(stock + gauss(30, 30))
+                y.append(stock + abs(gauss(stock, 30)))
             else:
-                y.append(gauss(4, 1))
+                stock = gauss(4, 1)
+                y.append(stock)
+        print(stock)
     return x, y
 
 
@@ -77,7 +79,11 @@ def calculate_price_second_phase(x, y, year, d, liq, pi):
                     print("day:{}|stock:{}|tmp:{}".format(x[-1], stock, tmp))
                     if maxVAL < y[-1]:
                         maxVAL = y[-1]
-                    y.append(stock + gauss(50, 100))
+                    stock = stock + gauss(50, 100)
+                    if stock > 0:
+                        y.append(stock)
+                    else:
+                        y.append(-stock)
             if FALLING:
                 if y[-1] > maxVAL/3:
                     variation = abs(gauss(maxVAL/300, 100 / d))
