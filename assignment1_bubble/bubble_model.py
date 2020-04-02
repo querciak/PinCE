@@ -27,14 +27,13 @@ CarefulStockOwnersFaith = 0.5
 def model_specs():
     #print("Reading parameters of the model...")
     mp = 0.5  # Market Penetration
-    d = 0.7  # Disruptiveness
     liq = 10 ** 9  # forecast for liquidity
-    length = 33  # length of the bubble in years
+    length = 11  # length of the bubble in years
     psycho_impact = 0.01  # Psychological impact
-    return mp, d, liq, length, psycho_impact
+    return mp, liq, length, psycho_impact
 
 
-def fill_list(mp, d, liq, length, pi):
+def fill_list(mp, liq, length, pi):
     #print("Starting model calculation...")
     x, y = [0], [1000]
     whenLastCrashEnded = 0
@@ -50,7 +49,7 @@ def fill_list(mp, d, liq, length, pi):
             x, y = calculate_price_first_phase(x, y, yearsFromLastCrash + 1, year + 1, mp, pi)
         else:
             print("SecondPhase")
-            x, y, temp = calculate_price_second_phase(x, y, yearsFromLastCrash + 1, year + 1, mp, d, liq, pi, whenLastCrashEnded)
+            x, y, temp = calculate_price_second_phase(x, y, yearsFromLastCrash + 1, year + 1, mp, liq, pi, whenLastCrashEnded)
             # Reset the model back to phase one when crash has reached it's lowest
             if temp > whenLastCrashEnded:
                 print("Reset cycle")
@@ -85,7 +84,7 @@ def calculate_price_first_phase(x, y, yearsFromLastCrash, year, mp, pi):
     return x, y
 
 
-def calculate_price_second_phase(x, y, yearsFromLastCrash, year, mp, d, liq, pi, previousCrashEnded):
+def calculate_price_second_phase(x, y, yearsFromLastCrash, year, mp, liq, pi, previousCrashEnded):
     # Added a mechanish to start the cycle again
     lastCrashEnded = previousCrashEnded
     crashHasEnded = False
@@ -129,8 +128,6 @@ def calculate_price_second_phase(x, y, yearsFromLastCrash, year, mp, d, liq, pi,
                 if y[-1] > maxVAL * mp and not crashHasEnded:
                     variation = gauss(10, 8) * 10
                     stock = y[-1] - variation
-                    if y[-1] < 100 * d:
-                        stock = -y[-1] / (d * 10)
                     y.append(stock + gauss(50, 10))
                 elif not crashHasEnded:
                     # As the stock has reached its low point return the current year to reset simulation back to phase one
@@ -154,8 +151,8 @@ def plot_graph(x, y, length):
 
 
 def main():
-    mp, d, liq, length, pi = model_specs()  # read characteristics of 'Ellesmera' (fictional name of a new application)
-    x, y = fill_list(mp, d, liq, length, pi)  # fill list with nominal price of 'Ellesmera
+    mp, liq, length, pi = model_specs()  # read characteristics of 'Ellesmera' (fictional name of a new application)
+    x, y = fill_list(mp, liq, length, pi)  # fill list with nominal price of 'Ellesmera
     if input("Animate the graph? [y/n]") == "y":
         ani = animation.FuncAnimation(fig, animate, fargs = (x,y), interval=50)
     else:
