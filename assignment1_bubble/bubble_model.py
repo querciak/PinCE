@@ -17,19 +17,19 @@ fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
 
 # Starting amount of stocks owned by careful investors
-StocksOwnedByCarefulInvestors = 0.01 * STOCKSn
+StocksOwnedByCarefulInvestors = STOCKSn * float(input("Set percentage of stocks owned by cautious investors (default=1)") or 1) / 100
 # Growth rate for the percentage of stocks owned by careful investors
-StocksOwnedByCarefulInvestorsGrowthRate = 0.0001
+StocksOwnedByCarefulInvestorsGrowthRate = float(input("Set Growth rate for stocks owned by cautious investors (default=0.0001)") or 0.0001)
 # Arbitary value on how much careful investors believe in market a.k.a buy more stocks
 CarefulStockOwnersFaith = 0.5
 
 
 def model_specs():
     #print("Reading parameters of the model...")
-    mp = 0.5  # Market Penetration
-    liq = 10 ** 9  # forecast for liquidity
-    length = 11  # length of the bubble in years
-    psycho_impact = 0.01  # Psychological impact
+    mp = float(input("Set market penetration (default=0.5)") or 0.5)  # Market Penetration
+    liq = 10 ** int(input("Give liquidity in power of 10 (default=9)") or 9)  # forecast for liquidity
+    length = int(input("Set the duration of the simulation (default=11)") or 11)  # length of the bubble in years
+    psycho_impact = float(input("Set the psychological impact factor (default=0.01)") or 0.01)  # Psychological impact
     return mp, liq, length, psycho_impact
 
 
@@ -153,7 +153,7 @@ def plot_graph(x, y, length):
 def main():
     mp, liq, length, pi = model_specs()  # read characteristics of 'Ellesmera' (fictional name of a new application)
     x, y = fill_list(mp, liq, length, pi)  # fill list with nominal price of 'Ellesmera
-    if input("Animate the graph? [y/n]") == "y":
+    if input("Animate the graph? [y] (default=n))") == "y":
         ani = animation.FuncAnimation(fig, animate, fargs = (x,y), interval=50)
     else:
         plot_graph(x, y, length)  # plot graph
